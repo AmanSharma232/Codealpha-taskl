@@ -1,12 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Age Calculator</title>
 </head>
 <body>
-    <P>Hello world</P>
-    
+  <h1>Age Calculator</h1>
+
+  <input type="number" id="day" placeholder="Day">
+  <input type="number" id="month" placeholder="Month">
+  <input type="number" id="year" placeholder="Year">
+
+  <button onclick="calculateAge()">Calculate Age</button>
+
+  <p id="error" style="color: red;"></p>
+  <h2 id="result"></h2>
+
+  <script>
+    function calculateAge() {
+      const day = Number(document.getElementById("day").value);
+      const month = Number(document.getElementById("month").value);
+      const year = Number(document.getElementById("year").value);
+
+      const error = document.getElementById("error");
+      const result = document.getElementById("result");
+
+      error.textContent = "";
+      result.textContent = "";
+
+      if (!day || !month || !year) {
+        error.textContent = "Please enter day, month, and year.";
+        return;
+      }
+
+      const today = new Date();
+      const birthDate = new Date(year, month - 1, day);
+
+      if (
+        birthDate.getDate() !== day ||
+        birthDate.getMonth() !== month - 1 ||
+        birthDate.getFullYear() !== year
+      ) {
+        error.textContent = "Please enter a valid date.";
+        return;
+      }
+
+      if (birthDate > today) {
+        error.textContent = "Date of birth cannot be in the future.";
+        return;
+      }
+
+      let ageYears = today.getFullYear() - birthDate.getFullYear();
+      let ageMonths = today.getMonth() - birthDate.getMonth();
+      let ageDays = today.getDate() - birthDate.getDate();
+
+      if (ageDays < 0) {
+        ageMonths--;
+        const previousMonthDays = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          0
+        ).getDate();
+
+        ageDays += previousMonthDays;
+      }
+
+      if (ageMonths < 0) {
+        ageYears--;
+        ageMonths += 12;
+      }
+
+      result.textContent =
+        ageYears + " years, " +
+        ageMonths + " months, " +
+        ageDays + " days";
+    }
+  </script>
 </body>
 </html>
